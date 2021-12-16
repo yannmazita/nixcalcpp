@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 namespace calc{
     
@@ -19,11 +20,11 @@ namespace calc{
      */
     class Node{
         public:
-            std::string data;
-            class Node* left;
-            class Node* right;
+            std::string data;   ///> Data in node.
+            class Node* left;   ///> Pointer to left child.
+            class Node* right;  ///> Pointer to right child.
 
-            Node(std::string inputData);
+            Node();
 
         private:
             /**
@@ -33,8 +34,26 @@ namespace calc{
             * @return true if target found in tree else false.
             */
             int Find(class Node* root, std::string target);
-            /* See that root is indeed the whole class and not simply an instance
-             * by using 'class Node*' and not simply 'node*'
+            /* See that root is indeed the whole class and not simply
+             * an instance by using 'class Node*' and not simply 'node*'
              */
+
+            /**
+             * Allocate memory for new node.
+             * @param newData the data to be stored in the node.
+             * @return pointer to the class making up the node.
+             */
+            class Node* NewNode(std::string newData);
+
+            /**
+             * Insert new node with data.
+             * Recursively go through the nodes of a tree until the
+             * first empty child is found. Then when it's found,
+             * store in it the wanted data using NewNode().
+             * @param node the starting node.
+             * @param newData the data to be stored in the node.
+             * @return pointer to the struct making up the node.
+             */
+            class Node* Insert(class Node* node, std::string newData);
     };
 }
