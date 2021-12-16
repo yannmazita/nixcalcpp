@@ -1,0 +1,49 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 3
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default",
+            "description": "Build using Unix Makefiles",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "debug-gdb",
+            "description": "Debug build using GDB",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "debug-lldb",
+            "description": "Debug build using LLDB",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_FLAGS": "-fstandalone-debug"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "debug-gdb",
+            "configurePreset": "debug-gdb"
+        },
+        {
+            "name": "debug-lldb",
+            "configurePreset": "debug-lldb"
+        }
+    ]
+}
