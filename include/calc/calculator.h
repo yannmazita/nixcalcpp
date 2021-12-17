@@ -29,7 +29,7 @@ namespace calc{
             static struct Node* root;
 
         public:
-            BinaryTree(std::string inputData);
+            BinaryTree();
 
             /**
             * Find target in (sub)tree.

@@ -6,10 +6,8 @@ namespace calc{
         std::string expr = inputExpr;
     }  
 
-    BinaryTree::BinaryTree(std::string inputData){
-                root->data = inputData;
-                root->left = NULL;
-                root->right = NULL;
+    BinaryTree::BinaryTree(){
+                root = NULL;
     }
 
     int BinaryTree::Find(std::string target, Node* node){
