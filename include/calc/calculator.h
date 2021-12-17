@@ -18,22 +18,26 @@ namespace calc{
     /**
      * Structure of a tree.
      */
-    class Node{
-        public:
-            std::string data;   ///> Data in node.
-            class Node* left;   ///> Pointer to left child.
-            class Node* right;  ///> Pointer to right child.
+    struct Node{
+        std::string data;   ///> Data in node.
+        struct Node* left;   ///> Pointer to left child.
+        struct Node* right;  ///> Pointer to right child.
+    };
 
-            Node();
-
+    class BinaryTree{
         private:
+            static struct Node* root;
+
+        public:
+            BinaryTree(std::string inputData);
+
             /**
             * Find target in tree.
-            * @param root root of the (sub)tree to search.
             * @param target target to find in (sub)tree.
+            * @param node the starting node for the recursion.
             * @return true if target found in tree else false.
             */
-            int Find(class Node* root, std::string target);
+            int Find(std::string target, Node* node = root);
             /* See that root is indeed the whole class and not simply
              * an instance by using 'class Node*' and not simply 'node*'
              */
@@ -43,7 +47,7 @@ namespace calc{
              * @param newData the data to be stored in the node.
              * @return pointer to the class making up the node.
              */
-            class Node* NewNode(std::string newData);
+            struct Node* NewNode(std::string newData);
 
             /**
              * Insert new node with data.
@@ -54,6 +58,6 @@ namespace calc{
              * @param newData the data to be stored in the node.
              * @return pointer to the struct making up the node.
              */
-            class Node* Insert(class Node* node, std::string newData);
+            struct Node* Insert(struct Node* node, std::string newData);
     };
 }

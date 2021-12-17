@@ -6,42 +6,48 @@ namespace calc{
         std::string expr = inputExpr;
     }  
 
-    int Node::Find(class Node* root, std::string target){
-        if (root == NULL){
+    BinaryTree::BinaryTree(std::string inputData){
+                root->data = inputData;
+                root->left = NULL;
+                root->right = NULL;
+    }
+
+    int BinaryTree::Find(std::string target, Node* node){
+        if (node == NULL){
             return false;
         }
-        else if (root->data == target){
+        else if (node->data == target){
                 return true;
         }
-        if (root->right != NULL){
-            return Find(root->right, target);
+        if (node->right != NULL){
+            return Find(target, node->right);
         }
         if (root->left != NULL){
-            return Find(root->left, target);
+            return Find(target, node->left);
         }
         return -1;
     }
 
-    class Node* Node::NewNode(std::string newData){
-        class Node* node = new(class Node);
+    struct Node* BinaryTree::NewNode(std::string newData){
+        class Node* node = new(struct Node);
         node->data = newData;
         node->left = NULL;
         node->right = NULL;
         return node;
     }
 
-    class Node* Node::Insert(class Node* node, std::string newData){
+    struct Node* BinaryTree::Insert(struct Node* node, std::string newData){
         // node is empty (NULL pointer)
         if (node == NULL){
-            return Node::NewNode(newData);
+            return BinaryTree::NewNode(newData);
         }
         // Left child is empty
         else if (node->left == NULL){
-            node->left = Node::Insert(node->left, newData);
+            node->left = BinaryTree::Insert(node->left, newData);
         }
         // Right child is empty
         else if (node->right == NULL){
-            node->right = Node::Insert(node->right, newData);
+            node->right = BinaryTree::Insert(node->right, newData);
         }
         return node;
     }
