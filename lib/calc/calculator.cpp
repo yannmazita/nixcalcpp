@@ -6,6 +6,8 @@ namespace calc{
         std::string expr = inputExpr;
     }  
 
+    struct Node;
+
     BinaryTree::BinaryTree(){
                 root = NULL;
     }

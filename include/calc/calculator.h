@@ -20,17 +20,18 @@ namespace calc{
      */
     struct Node{
         std::string data;   ///> Data in node.
-        struct Node* left;   ///> Pointer to left child.
-        struct Node* right;  ///> Pointer to right child.
+        Node* left;   ///> Pointer to left child.
+        Node* right;  ///> Pointer to right child.
     };
 
     class BinaryTree{
         private:
-            static struct Node* root;
+            static Node* root;
 
         public:
             BinaryTree();
 
+        private:
             /**
             * Find target in (sub)tree.
             * @param target target to find in tree.
