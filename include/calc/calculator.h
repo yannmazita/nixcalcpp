@@ -42,19 +42,19 @@ namespace calc{
             /**
              * Allocate memory for new node.
              * @param newData the data to be stored in the node.
-             * @return pointer to the class making up the node.
+             * @return pointer to the the new node.
              */
-            struct Node* NewNode(std::string newData);
+            Node* NewNode(std::string newData);
 
             /**
              * Insert new node with data.
              * Recursively go through the nodes of a tree until the
              * first empty child is found. Then when it's found,
              * store in it the wanted data using NewNode().
-             * @param node the starting node.
              * @param newData the data to be stored in the node.
-             * @return pointer to the struct making up the node.
+             * @param node the starting node.
+             * @return pointer to the updated node.
              */
-            struct Node* Insert(struct Node* node, std::string newData);
+            Node* Insert(std::string newData, Node* node = root);
     };
 }

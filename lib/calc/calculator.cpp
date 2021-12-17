@@ -26,26 +26,26 @@ namespace calc{
         return -1;
     }
 
-    struct Node* BinaryTree::NewNode(std::string newData){
-        class Node* node = new(struct Node);
+    Node* BinaryTree::NewNode(std::string newData){
+        Node* node = new Node;
         node->data = newData;
         node->left = NULL;
         node->right = NULL;
         return node;
     }
 
-    struct Node* BinaryTree::Insert(struct Node* node, std::string newData){
+    Node* BinaryTree::Insert(std::string newData, Node* node){
         // node is empty (NULL pointer)
         if (node == NULL){
             return BinaryTree::NewNode(newData);
         }
         // Left child is empty
         else if (node->left == NULL){
-            node->left = BinaryTree::Insert(node->left, newData);
+            node->left = BinaryTree::Insert(newData, node->left);
         }
         // Right child is empty
         else if (node->right == NULL){
-            node->right = BinaryTree::Insert(node->right, newData);
+            node->right = BinaryTree::Insert(newData, node->right);
         }
         return node;
     }
