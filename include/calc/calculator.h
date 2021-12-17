@@ -32,15 +32,12 @@ namespace calc{
             BinaryTree(std::string inputData);
 
             /**
-            * Find target in tree.
-            * @param target target to find in (sub)tree.
+            * Find target in (sub)tree.
+            * @param target target to find in tree.
             * @param node the starting node for the recursion.
             * @return true if target found in tree else false.
             */
             int Find(std::string target, Node* node = root);
-            /* See that root is indeed the whole class and not simply
-             * an instance by using 'class Node*' and not simply 'node*'
-             */
 
             /**
              * Allocate memory for new node.
