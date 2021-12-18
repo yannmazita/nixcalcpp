@@ -20,10 +20,10 @@ namespace calc{
                 return true;
         }
         if (node->right != NULL){
-            return Find(target, node->right);
+            return BinaryTree::Find(target, node->right);
         }
         if (root->left != NULL){
-            return Find(target, node->left);
+            return BinaryTree::Find(target, node->left);
         }
         return -1;
     }
@@ -43,11 +43,11 @@ namespace calc{
         }
         // Left child is empty
         else if (node->left == NULL){
-            Insert(newData, node->left);
+            BinaryTree::Insert(newData, node->left);
         }
         // Right child is empty
         else if (node->right == NULL){
-            Insert(newData, node->right);
+            BinaryTree::Insert(newData, node->right);
         }
     }
 
