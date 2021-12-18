@@ -51,11 +51,12 @@ namespace calc{
              * Insert new node with data.
              * Recursively go through the nodes of a tree until the
              * first empty child is found. Then when it's found,
-             * store in it the wanted data using NewNode().
+             * store in it the wanted data using NewNode(). If no
+             * node is given, the root node will be used.
              * @param newData the data to be stored in the node.
              * @param node the starting node.
              * @return pointer to the updated node.
              */
-            Node* Insert(std::string newData, Node* node = root);
+            void Insert(std::string newData, Node* node = root);
     };
 }

@@ -36,20 +36,19 @@ namespace calc{
         return node;
     }
 
-    Node* BinaryTree::Insert(std::string newData, Node* node){
+    void BinaryTree::Insert(std::string newData, Node* node){
         // node is empty (NULL pointer)
         if (node == NULL){
-            return BinaryTree::NewNode(newData);
+            *node = *BinaryTree::NewNode(newData);
         }
         // Left child is empty
         else if (node->left == NULL){
-            node->left = BinaryTree::Insert(newData, node->left);
+            Insert(newData, node->left);
         }
         // Right child is empty
         else if (node->right == NULL){
-            node->right = BinaryTree::Insert(newData, node->right);
+            Insert(newData, node->right);
         }
-        return node;
     }
 }
 
