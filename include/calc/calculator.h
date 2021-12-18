@@ -58,5 +58,9 @@ namespace calc{
              * @return pointer to the updated node.
              */
             void Insert(std::string newData, Node* node = root);
+
+        public:
+            int IsTargetInTree(std::string target);
+            void InsertTarget(std::string newData);
     };
 }

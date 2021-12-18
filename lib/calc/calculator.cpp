@@ -50,5 +50,14 @@ namespace calc{
             Insert(newData, node->right);
         }
     }
+
+    // Public acces methods
+    int BinaryTree::IsTargetInTree(std::string target){
+        return BinaryTree::Find(target);
+    }
+
+    void BinaryTree::InsertTarget(std::string newData){
+        BinaryTree::Insert(newData);
+    }
 }
 
