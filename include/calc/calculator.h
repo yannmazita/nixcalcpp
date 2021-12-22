@@ -18,11 +18,7 @@ namespace calc{
     /**
      * Structure of a tree.
      */
-    struct Node{
-        std::string data;   ///> Data in node.
-        Node* left;   ///> Pointer to left child.
-        Node* right;  ///> Pointer to right child.
-    };
+    struct Node;
 
     class BinaryTree{
         private:
