@@ -12,13 +12,11 @@ namespace calc{
         Node* right;
     };
 
-
-    Node* BinaryTree::root;
     BinaryTree::BinaryTree(){
         root = NULL;
     }
 
-    int BinaryTree::Find(std::string target, Node* node){
+    int BinaryTree::Find(std::string target, Node* &node){
         if (node == NULL){
             return false;
         }
@@ -42,10 +40,10 @@ namespace calc{
         return node;
     }
 
-    void BinaryTree::Insert(std::string newData, Node* node){
+    void BinaryTree::Insert(std::string newData, Node* &node){
         // node is empty (NULL pointer)
         if (node == NULL){
-            *node = *BinaryTree::NewNode(newData);
+            node = BinaryTree::NewNode(newData);
         }
         // Left child is empty
         else if (node->left == NULL){
@@ -59,11 +57,11 @@ namespace calc{
 
     // Public acces methods
     int BinaryTree::IsTargetInTree(std::string target){
-        return BinaryTree::Find(target);
+        return BinaryTree::Find(target, root);
     }
 
     void BinaryTree::InsertTarget(std::string newData){
-        BinaryTree::Insert(newData);
+        BinaryTree::Insert(newData, root);
     }
 }
 
