@@ -33,6 +33,12 @@ namespace calc{
     }
 
     bool Expression::IsLeftAssociative(std::string oper){
+        if (oper == CharToString('-') ||
+                oper == CharToString('/') ||
+                oper == CharToString('+') ||
+                oper == CharToString('*')){
+            return true;
+        }
         return false;
     }
 
@@ -57,7 +63,9 @@ namespace calc{
             else{
                 std::string curChar = CharToString(expr[i]);   ///> Conversion of current character to string.
                 if (IsOperator(curChar)){
-                    // Push stored number to 'outputQueue' then clear it
+                    /* Push stored number to 'outputQueue' then clear it.
+                     * This is done to push numbers that have yet to be pushed when encountering an operator.
+                     */
                     if (tmpNumString.size() != 0){
                        outputQueue.push(tmpNumString);
                         ClearNumber();
@@ -65,7 +73,8 @@ namespace calc{
                     while ((IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
                             ((Precedence(operatorStack.top(), curChar) == 1 ||
                               (Precedence(operatorStack.top(), curChar) == 0 && IsLeftAssociative(curChar))))){
-                        //
+                        outputQueue.push(operatorStack.top());
+                        operatorStack.pop();
                     }
                 }
             }
