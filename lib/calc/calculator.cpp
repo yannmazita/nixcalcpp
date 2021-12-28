@@ -1,10 +1,79 @@
 #include "calculator.h"
+#include <cctype>
 #include <cstdio>
+#include <queue>
+#include <stack>
 
 namespace calc{
     Expression::Expression(std::string inputExpr){
-        std::string expr = inputExpr;
+        expr = inputExpr;
     }  
+
+    void Expression::StoreNumber(const int pos){
+        tmpNumString.push_back(expr[pos]);
+    }
+
+    void Expression::ClearNumber(){
+        tmpNumString.clear();
+    }
+
+    std::string Expression::CharToString(const char chr){
+        std::string str(1, chr);
+        return str;
+    }
+
+    bool Expression::IsOperator(std::string chr){
+        if (chr == CharToString('+') ||
+                chr == CharToString('-') ||
+                chr == CharToString('*') ||
+                chr == CharToString('/')){
+            return true;
+        }
+        return false;
+    }
+
+    bool Expression::IsLeftAssociative(std::string oper){
+        return false;
+    }
+
+    int Expression::Precedence(std::string oper1, std::string oper2){
+
+        return 0;
+    }
+
+    std::string Expression::PostFixConvert(){
+        std::string convertedExpr;              ///> Postfix conversion of the expression.
+        std::queue<std::string> outputQueue;    ///> First in, first out container.
+        std::stack<std::string> operatorStack;  ///> Last in, first out container.
+
+        for (int i = 0; i < expr.size(); i++){
+            if (std::isdigit(expr[i])){
+                StoreNumber(expr[i]);
+                if (i == expr.size() - 1){
+                    outputQueue.push(tmpNumString);
+                    ClearNumber();
+                }
+            }
+            else{
+                std::string curChar = CharToString(expr[i]);   ///> Conversion of current character to string.
+                if (IsOperator(curChar)){
+                    // Push stored number to 'outputQueue' then clear it
+                    if (tmpNumString.size() != 0){
+                       outputQueue.push(tmpNumString);
+                        ClearNumber();
+                    }
+                    while ((IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                            ((Precedence(operatorStack.top(), curChar) == 1 ||
+                              (Precedence(operatorStack.top(), curChar) == 0 && IsLeftAssociative(curChar))))){
+                        //
+                    }
+                }
+            }
+
+        }
+
+        return convertedExpr;
+    }
 
     struct Node{
         std::string data;
@@ -53,8 +122,11 @@ namespace calc{
         else if (node->right == NULL){
             BinaryTree::Insert(newData, node->right);
         }
+        // 
+        else{
+            BinaryTree::Insert(newData, node->right);
+        }
     }
-
     // Public acces methods
     int BinaryTree::IsTargetInTree(std::string target){
         return BinaryTree::Find(target, root);
