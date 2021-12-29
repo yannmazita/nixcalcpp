@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <map>
 
 namespace calc{
     
@@ -19,10 +20,11 @@ namespace calc{
 
         private:
             /**
-             * Push to a string a character from the infix expression.
-             * @param pos the position of the character.
+             * Store number starting at specific position in the expression.
+             * @param pos position of the character of the number.
+             * @return position+1 of the last character of the number.
              */
-            void StoreNumber(const int pos);
+            int StoreNumber(const int pos);
 
             /**
              * Clear current number stored in string form.
@@ -50,6 +52,11 @@ namespace calc{
              * @return true if left associative, false otherwise.
              */
             bool IsLeftAssociative(std::string oper);
+
+            /** Tokenize expression.
+             * @return map of tokenized items. Keys are items, values their nature.
+             */
+            std::map<std::string, char> Tokenizer();
 
             /**
              * Evaluate precedence of operators.

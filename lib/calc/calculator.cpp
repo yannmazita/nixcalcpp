@@ -9,8 +9,13 @@ namespace calc{
         expr = inputExpr;
     }  
 
-    void Expression::StoreNumber(const int pos){
-        tmpNumString.push_back(expr[pos]);
+    int Expression::StoreNumber(const int pos){
+        int i = pos;
+        while (i < (int)expr.size() && (std::isdigit(expr[i]) || expr[i] == '.')){
+            tmpNumString.push_back(expr[i]);
+            i++;
+        }
+        return i;
     }
 
     void Expression::ClearNumber(){
@@ -44,6 +49,31 @@ namespace calc{
         return false;
     }
 
+    std::map<std::string, char> Expression::Tokenizer(){
+        std::map<std::string, char> tokenMap;
+        int loopJump = -1;   ///> Position to jump to when tokenizing a number.
+        for (int i = 0; i < expr.size(); i++){
+            if (IsOperator(CharToString(expr[i]))){
+                tokenMap[CharToString(expr[i])] = 'o';
+                loopJump = -1;
+            }
+            else if (expr[i] == '('){
+                tokenMap[CharToString(expr[i])] = 'l';
+                loopJump = -1;
+            }
+            else if (expr[i] == ')'){
+                tokenMap[CharToString(expr[i])] = 'r';
+                loopJump = -1;
+            }
+            else if (std::isdigit(expr[i]) && loopJump < i){
+                loopJump = StoreNumber(i);
+                tokenMap[tmpNumString] = 'n';
+            }
+            // implement function tokenization
+        }
+        return tokenMap;
+    }
+
     int Expression::Precedence(std::string oper1, std::string oper2){
         char arr[10] = {'^','1','+','2','-','2','*','3','/','3'};   ///> Precedence array, lowest number means highest precedence.
         char arrPrecedence[2];
@@ -69,59 +99,7 @@ namespace calc{
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
 
         for (int i = 0; i < expr.size(); i++){
-            if (std::isdigit(expr[i])){
-                StoreNumber(expr[i]);
-                if (i == expr.size() - 1){
-                    outputQueue.push(tmpNumString);
-                    ClearNumber();
-                }
-            }
-            else{
-                std::string curChar = CharToString(expr[i]);   ///> Conversion of current character to string.
-                if (IsOperator(curChar)){
-                    /* Push stored number to 'outputQueue' then clear it.
-                     * This is done to push numbers that have yet to be pushed when encountering an operator.
-                     */
-                    if (tmpNumString.size() != 0){
-                       outputQueue.push(tmpNumString);
-                        ClearNumber();
-                    }
-                    while ((IsOperator(operatorStack.top()) && (operatorStack.top() != CharToString('('))) &&
-                            ((Precedence(operatorStack.top(), curChar) == 1 ||
-                              (Precedence(operatorStack.top(), curChar) == 0 && IsLeftAssociative(curChar))))){
-                        outputQueue.push(operatorStack.top());
-                        operatorStack.pop();
-                    }
-                    operatorStack.push(curChar);
-                }
-                else if (expr[i] == '('){
-                    operatorStack.push(curChar);
-                }
-                else if (expr[i] == ')'){
-                    while (operatorStack.top() != CharToString('(')){
-                        if (!operatorStack.empty()){
-                            outputQueue.push(operatorStack.top());
-                            operatorStack.pop();
-                        }
-                        else{
-                            break;
-                        }
-                    }
-                    if (operatorStack.top() == CharToString('(')){
-                        operatorStack.pop();
-                    }
-                    //implement function handling
-                }
-            }
-            while (!operatorStack.empty()){
-                if (operatorStack.top() != CharToString('(')){
-                    outputQueue.push(operatorStack.top());
-                    operatorStack.pop();
-                }
-                else{
-                    break;
-                }
-            }
+            std::map tokens = Tokenizer();
         }
         return convertedExpr;
     }
