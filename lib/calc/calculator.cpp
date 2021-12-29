@@ -26,7 +26,8 @@ namespace calc{
         if (chr == CharToString('+') ||
                 chr == CharToString('-') ||
                 chr == CharToString('*') ||
-                chr == CharToString('/')){
+                chr == CharToString('/') ||
+                chr == CharToString('^')){
             return true;
         }
         return false;
@@ -36,18 +37,33 @@ namespace calc{
         if (oper == CharToString('-') ||
                 oper == CharToString('/') ||
                 oper == CharToString('+') ||
-                oper == CharToString('*')){
+                oper == CharToString('*') ||
+                oper == CharToString('^')){
             return true;
         }
         return false;
     }
 
     int Expression::Precedence(std::string oper1, std::string oper2){
-
-        return 0;
+        char arr[10] = {'^','1','+','2','-','2','*','3','/','3'};   ///> Precedence array, lowest number means highest precedence.
+        char arrPrecedence[2];
+        for (int i = 0; i < 10; i += 2){
+            if (oper1 == CharToString(arr[i])){
+                arrPrecedence[0] = arr[i + 1];
+            } else if (oper2 == CharToString(arr[i])){
+                arrPrecedence[1] = arr[i + 1];
+            }
+        }
+        if (arrPrecedence[0] < arrPrecedence[1]){
+            return 1;
+        } else if (arrPrecedence[1] < arrPrecedence[0]){
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
-    std::string Expression::PostFixConvert(){
+    std::string Expression::PostfixConvert(){
         std::string convertedExpr;              ///> Postfix conversion of the expression.
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
@@ -70,18 +86,52 @@ namespace calc{
                        outputQueue.push(tmpNumString);
                         ClearNumber();
                     }
-                    while ((IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                    while ((IsOperator(operatorStack.top()) && (operatorStack.top() != CharToString('('))) &&
                             ((Precedence(operatorStack.top(), curChar) == 1 ||
                               (Precedence(operatorStack.top(), curChar) == 0 && IsLeftAssociative(curChar))))){
                         outputQueue.push(operatorStack.top());
                         operatorStack.pop();
                     }
+                    operatorStack.push(curChar);
+                }
+                else if (expr[i] == '('){
+                    operatorStack.push(curChar);
+                }
+                else if (expr[i] == ')'){
+                    while (operatorStack.top() != CharToString('(')){
+                        if (!operatorStack.empty()){
+                            outputQueue.push(operatorStack.top());
+                            operatorStack.pop();
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    if (operatorStack.top() == CharToString('(')){
+                        operatorStack.pop();
+                    }
+                    //implement function handling
                 }
             }
-
+            while (!operatorStack.empty()){
+                if (operatorStack.top() != CharToString('(')){
+                    outputQueue.push(operatorStack.top());
+                    operatorStack.pop();
+                }
+                else{
+                    break;
+                }
+            }
         }
-
         return convertedExpr;
+    }
+    
+    void Expression::DisplayPostfix(){
+        std::string str = PostfixConvert();
+        for (auto chr : str){
+            std::cout << chr;
+        }
+        std::cout << '\n';
     }
 
     struct Node{

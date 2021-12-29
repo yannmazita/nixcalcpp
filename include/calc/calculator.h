@@ -63,7 +63,10 @@ namespace calc{
              * Converts infix mathematical expression to postfix notation.
              * @return a string of the converted expression.
              */
-            std::string PostFixConvert();
+            std::string PostfixConvert();
+
+        public:
+            void DisplayPostfix();
     };
 
     /**
