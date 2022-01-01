@@ -36,7 +36,7 @@ namespace calc{
              * @param chr the character to convert.
              * @return the converted character.
              */
-            std::string CharToString(const char chr);
+            std::string CharToString(char chr);
 
             /**
              * Evaluate whether character is an operator.
@@ -56,7 +56,7 @@ namespace calc{
             /** Tokenize expression.
              * @return map of tokenized items. Keys are items, values their nature.
              */
-            std::map<std::string, char> Tokenizer();
+            std::multimap<std::string, char> Tokenizer();
 
             /**
              * Evaluate precedence of operators.

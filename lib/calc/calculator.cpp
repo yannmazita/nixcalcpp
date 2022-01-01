@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <queue>
 #include <stack>
+#include <utility>
 
 namespace calc{
     Expression::Expression(std::string inputExpr){
@@ -22,7 +23,7 @@ namespace calc{
         tmpNumString.clear();
     }
 
-    std::string Expression::CharToString(const char chr){
+    std::string Expression::CharToString(char chr){
         std::string str(1, chr);
         return str;
     }
@@ -49,25 +50,25 @@ namespace calc{
         return false;
     }
 
-    std::map<std::string, char> Expression::Tokenizer(){
-        std::map<std::string, char> tokenMap;
+    std::multimap<std::string, char> Expression::Tokenizer(){
+        std::multimap<std::string, char> tokenMap;
         int loopJump = -1;   ///> Position to jump to when tokenizing a number.
         for (int i = 0; i < expr.size(); i++){
             if (IsOperator(CharToString(expr[i]))){
-                tokenMap[CharToString(expr[i])] = 'o';
+                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'o'));
                 loopJump = -1;
             }
             else if (expr[i] == '('){
-                tokenMap[CharToString(expr[i])] = 'l';
+                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'l'));
                 loopJump = -1;
             }
             else if (expr[i] == ')'){
-                tokenMap[CharToString(expr[i])] = 'r';
+                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'r'));
                 loopJump = -1;
             }
             else if (std::isdigit(expr[i]) && loopJump < i){
                 loopJump = StoreNumber(i);
-                tokenMap[tmpNumString] = 'n';
+                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'n'));
             }
             // implement function tokenization
         }
@@ -76,7 +77,7 @@ namespace calc{
 
     int Expression::Precedence(std::string oper1, std::string oper2){
         char arr[10] = {'^','1','+','2','-','2','*','3','/','3'};   ///> Precedence array, lowest number means highest precedence.
-        char arrPrecedence[2];
+        char arrPrecedence[2];  ///> Precedence of given operators, first value for 'oper1', second value for 'oper2'.
         for (int i = 0; i < 10; i += 2){
             if (oper1 == CharToString(arr[i])){
                 arrPrecedence[0] = arr[i + 1];
@@ -97,9 +98,16 @@ namespace calc{
         std::string convertedExpr;              ///> Postfix conversion of the expression.
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
+        std::multimap<std::string, char> tokens = Tokenizer();          ///> Tokens of items in the expression.
 
-        for (int i = 0; i < expr.size(); i++){
-            std::map tokens = Tokenizer();
+        for (const auto &pair : tokens){
+            if (pair.second == 'n'){
+                outputQueue.push(pair.first);
+            }
+            else if (pair.second == 'o'){
+                while((IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) ){
+                }
+            }
         }
         return convertedExpr;
     }
