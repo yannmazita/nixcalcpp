@@ -1,9 +1,7 @@
 #include "calculator.h"
 #include <cctype>
 #include <cstdio>
-#include <queue>
 #include <stack>
-#include <utility>
 
 namespace calc{
     Expression::Expression(std::string inputExpr){
@@ -52,25 +50,29 @@ namespace calc{
 
     std::multimap<std::string, char> Expression::Tokenizer(){
         std::multimap<std::string, char> tokenMap;
-        int loopJump = -1;   ///> Position to jump to when tokenizing a number.
+        int jumpIdx = 0;   ///> Index of next non-digit char to jump to when storing numbers.
         for (int i = 0; i < expr.size(); i++){
-            if (IsOperator(CharToString(expr[i]))){
-                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'o'));
-                loopJump = -1;
+            if (i < jumpIdx && i != 0){
+                // Jump characters until jumpIdx.
+                continue;
             }
-            else if (expr[i] == '('){
-                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'l'));
-                loopJump = -1;
+            else{
+                if (IsOperator(CharToString(expr[i]))){
+                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'o'));
+                }
+                else if (expr[i] == '('){
+                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'l'));
+                }
+                else if (expr[i] == ')'){
+                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'r'));
+                }
+                else if (std::isdigit(expr[i])){
+                    jumpIdx = StoreNumber(i);
+                    tokenMap.insert(std::make_pair(tmpNumString, 'n'));
+                    ClearNumber();
+                }
+                // Implement function tokenization.
             }
-            else if (expr[i] == ')'){
-                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'r'));
-                loopJump = -1;
-            }
-            else if (std::isdigit(expr[i]) && loopJump < i){
-                loopJump = StoreNumber(i);
-                tokenMap.insert(std::make_pair(CharToString(expr[i]), 'n'));
-            }
-            // implement function tokenization
         }
         return tokenMap;
     }
@@ -94,8 +96,7 @@ namespace calc{
         }
     }
 
-    std::string Expression::PostfixConvert(){
-        std::string convertedExpr;              ///> Postfix conversion of the expression.
+    std::queue<std::string> Expression::PostfixConvert(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
         std::multimap<std::string, char> tokens = Tokenizer();          ///> Tokens of items in the expression.
@@ -105,19 +106,43 @@ namespace calc{
                 outputQueue.push(pair.first);
             }
             else if (pair.second == 'o'){
-                while((IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) ){
+                while( (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                        (Precedence(operatorStack.top(), pair.first)==1 || ((Precedence(operatorStack.top(), pair.first)==0) &&
+                                                                            IsLeftAssociative(pair.first))) ){
+                    outputQueue.push(operatorStack.top());
+                    operatorStack.pop();
+                }
+                operatorStack.push(pair.first);
+            }
+            else if (pair.second == 'l'){
+                operatorStack.push(pair.first);
+            }
+            else if (pair.second == 'r'){
+                while(!operatorStack.empty() && (operatorStack.top() != CharToString('('))){
+                    outputQueue.push(operatorStack.top());
+                    operatorStack.pop();
+                }
+                if (operatorStack.top() == CharToString('(')){
+                    operatorStack.pop();
                 }
             }
         }
-        return convertedExpr;
+        while (!operatorStack.empty()){
+            if (operatorStack.top() != CharToString('(')){
+                outputQueue.push(operatorStack.top());
+                operatorStack.pop();
+            }
+        }
+
+        return outputQueue;
     }
     
     void Expression::DisplayPostfix(){
-        std::string str = PostfixConvert();
-        for (auto chr : str){
-            std::cout << chr;
+        std::queue<std::string> que = PostfixConvert();
+        while (!que.empty()){
+            std::cout << que.front();
+            que.pop();
         }
-        std::cout << '\n';
     }
 
     struct Node{

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <queue>
 
 namespace calc{
     
@@ -68,9 +69,9 @@ namespace calc{
 
             /**
              * Converts infix mathematical expression to postfix notation.
-             * @return a string of the converted expression.
+             * @return queue of the converted expression.
              */
-            std::string PostfixConvert();
+            std::queue<std::string> PostfixConvert();
 
         public:
             void DisplayPostfix();
