@@ -48,33 +48,32 @@ namespace calc{
         return false;
     }
 
-    std::multimap<std::string, char> Expression::Tokenizer(){
-        std::multimap<std::string, char> tokenMap;
+    std::vector<std::pair<std::string, char>> Expression::Tokenizer(){
+        std::vector<std::pair<std::string, char>> tokens;
         int jumpIdx = 0;   ///> Index of next non-digit char to jump to when storing numbers.
         for (int i = 0; i < expr.size(); i++){
             if (i < jumpIdx && i != 0){
                 // Jump characters until jumpIdx.
                 continue;
             }
-            else{
-                if (IsOperator(CharToString(expr[i]))){
-                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'o'));
-                }
-                else if (expr[i] == '('){
-                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'l'));
-                }
-                else if (expr[i] == ')'){
-                    tokenMap.insert(std::make_pair(CharToString(expr[i]), 'r'));
-                }
-                else if (std::isdigit(expr[i])){
-                    jumpIdx = StoreNumber(i);
-                    tokenMap.insert(std::make_pair(tmpNumString, 'n'));
-                    ClearNumber();
-                }
-                // Implement function tokenization.
+            if (IsOperator(CharToString(expr[i]))){
+                tokens.push_back(std::make_pair(CharToString(expr[i]), 'o'));
+                // make_pair() template function to make a std::pair with adequate types
             }
+            else if (expr[i] == '('){
+                tokens.push_back(std::make_pair(CharToString(expr[i]), 'l'));
+            }
+            else if (expr[i] == ')'){
+                tokens.push_back(std::make_pair(CharToString(expr[i]), 'r'));
+            }
+            else if (std::isdigit(expr[i])){
+                jumpIdx = StoreNumber(i);
+                tokens.push_back(std::make_pair(tmpNumString, 'n'));
+                ClearNumber();
+            }
+            // Implement function tokenization.
         }
-        return tokenMap;
+        return tokens;
     }
 
     int Expression::Precedence(std::string oper1, std::string oper2){
@@ -99,25 +98,33 @@ namespace calc{
     std::queue<std::string> Expression::PostfixConvert(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
-        std::multimap<std::string, char> tokens = Tokenizer();          ///> Tokens of items in the expression.
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(); ///> Expression tokens.
 
-        for (const auto &pair : tokens){
-            if (pair.second == 'n'){
-                outputQueue.push(pair.first);
+        for (int i = 0; i < (int)tokens.size(); i++){
+            if (tokens[i].second == 'n'){
+                outputQueue.push(tokens[i].first);
             }
-            else if (pair.second == 'o'){
+            else if (tokens[i].second == 'o'){
+                
                 while( (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
-                        (Precedence(operatorStack.top(), pair.first)==1 || ((Precedence(operatorStack.top(), pair.first)==0) &&
-                                                                            IsLeftAssociative(pair.first))) ){
+                        (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) &&
+                                                                            IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
                 }
-                operatorStack.push(pair.first);
+                /*
+                while( (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                        (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) )) ){
+                    outputQueue.push(operatorStack.top());
+                    operatorStack.pop();
+                }
+                */
+                operatorStack.push(tokens[i].first);
             }
-            else if (pair.second == 'l'){
-                operatorStack.push(pair.first);
+            else if (tokens[i].second == 'l'){
+                operatorStack.push(tokens[i].first);
             }
-            else if (pair.second == 'r'){
+            else if (tokens[i].second == 'r'){
                 while(!operatorStack.empty() && (operatorStack.top() != CharToString('('))){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
@@ -133,7 +140,6 @@ namespace calc{
                 operatorStack.pop();
             }
         }
-
         return outputQueue;
     }
     

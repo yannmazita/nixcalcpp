@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <map>
+#include <vector>
 #include <queue>
 
 namespace calc{
@@ -54,10 +54,11 @@ namespace calc{
              */
             bool IsLeftAssociative(std::string oper);
 
-            /** Tokenize expression.
-             * @return map of tokenized items. Keys are items, values their nature.
+            /**
+             * Tokenize expression.
+             * @return vector of pairs of strings with their assigned meaning.
              */
-            std::multimap<std::string, char> Tokenizer();
+            std::vector<std::pair<std::string, char>> Tokenizer();
 
             /**
              * Evaluate precedence of operators.
