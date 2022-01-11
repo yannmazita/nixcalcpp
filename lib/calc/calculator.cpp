@@ -22,7 +22,7 @@ namespace calc{
     }
 
     std::string Expression::CharToString(char chr){
-        std::string str(1, chr);
+        std::string str{chr};
         return str;
     }
 
@@ -34,7 +34,9 @@ namespace calc{
                 chr == CharToString('^')){
             return true;
         }
-        return false;
+        else{
+            return false;
+        }
     }
 
     bool Expression::IsLeftAssociative(std::string oper){
@@ -52,18 +54,25 @@ namespace calc{
         std::vector<std::pair<std::string, char>> tokens;
         int jumpIdx = 0;   ///> Index of next non-digit char to jump to when storing numbers.
         for (int i = 0; i < expr.size(); i++){
+            //std::string tmpCarString;
+            //tmpCarString.push_back(expr[i]);
             if (i < jumpIdx && i != 0){
                 // Jump characters until jumpIdx.
                 continue;
             }
             if (IsOperator(CharToString(expr[i]))){
+                //tokens.push_back(std::make_pair(tmpCarString, 'o'));
                 tokens.push_back(std::make_pair(CharToString(expr[i]), 'o'));
                 // make_pair() template function to make a std::pair with adequate types
             }
             else if (expr[i] == '('){
+                //tmpCarString.push_back(expr[i]);
+                //tokens.push_back(std::make_pair(tmpCarString, 'l'));
                 tokens.push_back(std::make_pair(CharToString(expr[i]), 'l'));
             }
             else if (expr[i] == ')'){
+                //tmpCarString.push_back(expr[i]);
+                //tokens.push_back(std::make_pair(tmpCarString, 'r'));
                 tokens.push_back(std::make_pair(CharToString(expr[i]), 'r'));
             }
             else if (std::isdigit(expr[i])){
@@ -105,20 +114,12 @@ namespace calc{
                 outputQueue.push(tokens[i].first);
             }
             else if (tokens[i].second == 'o'){
-                
-                while( (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
                         (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) &&
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
                 }
-                /*
-                while( (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
-                        (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) )) ){
-                    outputQueue.push(operatorStack.top());
-                    operatorStack.pop();
-                }
-                */
                 operatorStack.push(tokens[i].first);
             }
             else if (tokens[i].second == 'l'){
@@ -129,7 +130,7 @@ namespace calc{
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
                 }
-                if (operatorStack.top() == CharToString('(')){
+                if (!operatorStack.empty() && operatorStack.top() == CharToString('(')){
                     operatorStack.pop();
                 }
             }
@@ -144,11 +145,21 @@ namespace calc{
     }
     
     void Expression::DisplayPostfix(){
+        
         std::queue<std::string> que = PostfixConvert();
         while (!que.empty()){
             std::cout << que.front();
             que.pop();
         }
+        
+        /*
+        std::stack<std::string> operatorStack;
+        operatorStack.push(CharToString('+'));
+        operatorStack.push(CharToString('('));
+        std::cout << IsOperator(operatorStack.top()) << '\n';
+        operatorStack.push(CharToString('/'));
+        std::cout << IsOperator(operatorStack.top()) << '\n';
+        */
     }
 
     struct Node{
