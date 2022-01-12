@@ -1,7 +1,6 @@
 #include "calculator.h"
 #include <cctype>
 #include <cstdio>
-#include <stack>
 
 namespace calc{
     Expression::Expression(std::string inputExpr){
@@ -43,8 +42,7 @@ namespace calc{
         if (oper == CharToString('-') ||
                 oper == CharToString('/') ||
                 oper == CharToString('+') ||
-                oper == CharToString('*') ||
-                oper == CharToString('^')){
+                oper == CharToString('*')){
             return true;
         }
         return false;
@@ -79,7 +77,7 @@ namespace calc{
     }
 
     int Expression::Precedence(std::string oper1, std::string oper2){
-        char arr[10] = {'^','1','+','2','-','2','*','3','/','3'};   ///> Precedence array, lowest number means highest precedence.
+        char arr[10] = {'^','1','*','2','/','2','+','3','-','3'};   ///> Precedence array, lowest number means highest precedence.
         char arrPrecedence[2];  ///> Precedence of given operators, first value for 'oper1', second value for 'oper2'.
         for (int i = 0; i < 10; i += 2){
             if (oper1 == CharToString(arr[i])){
@@ -97,6 +95,23 @@ namespace calc{
         }
     }
 
+    void Expression::debugPrint(std::queue<std::string> &outputQueue, std::stack<std::string> &operatorStack){
+        std::queue<std::string> tmpQueue = outputQueue;
+        std::stack<std::string> tmpStack = operatorStack;
+        
+        std::cout << "outputQueue = ";
+        while (!tmpQueue.empty()){
+            std::cout << tmpQueue.front();
+            tmpQueue.pop();
+        }
+        std::cout << " ; operatorStack = ";
+        while (!tmpStack.empty()){
+            std::cout << tmpStack.top();
+            tmpStack.pop();
+        }
+        std::cout << "\n";
+    }
+
     std::queue<std::string> Expression::PostfixConvert(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
@@ -108,6 +123,7 @@ namespace calc{
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
                 outputQueue.push(tokens[i].first);
+                debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'o'){
                 while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
@@ -115,19 +131,24 @@ namespace calc{
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
+                    //debugPrint(outputQueue, operatorStack);
                 }
                 operatorStack.push(tokens[i].first);
+                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'l'){
                 operatorStack.push(tokens[i].first);
+                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'r'){
                 while(!operatorStack.empty() && (operatorStack.top() != CharToString('('))){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
+                    //debugPrint(outputQueue, operatorStack);
                 }
                 if (!operatorStack.empty() && operatorStack.top() == CharToString('(')){
                     operatorStack.pop();
+                    //debugPrint(outputQueue, operatorStack);
                 }
             }
         }
@@ -135,6 +156,7 @@ namespace calc{
             if (operatorStack.top() != CharToString('(')){
                 outputQueue.push(operatorStack.top());
                 operatorStack.pop();
+                //debugPrint(outputQueue, operatorStack);
             }
         }
         return outputQueue;
@@ -147,6 +169,7 @@ namespace calc{
             std::cout << que.front();
             que.pop();
         }
+        std::cout << "\n";
     }
 
     struct Node{

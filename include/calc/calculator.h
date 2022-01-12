@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <stack>
 
 namespace calc{
     
@@ -64,9 +65,14 @@ namespace calc{
              * Evaluate precedence of operators.
              * @param Oper1 the first operator.
              * @param Oper2 the second operator.
-             * @return 1 if oper1 has precendence, -1 if oper2, 0 if same
+             * @return 1 if oper1 has precendence, -1 if oper2, 0 if same.
              */
             int Precedence(std::string oper1, std::string oper2);
+
+            /**
+             * Print content of outputQueue and operatorStack.
+             */
+            void debugPrint(std::queue<std::string> &outputQueue, std::stack<std::string> &operatorStack);
 
             /**
              * Converts infix mathematical expression to postfix notation.
