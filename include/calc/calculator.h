@@ -55,11 +55,14 @@ namespace calc{
              */
             bool IsLeftAssociative(std::string oper);
 
+        public:
             /**
              * Tokenize expression.
              * @return vector of pairs of strings with their assigned meaning.
              */
-            std::vector<std::pair<std::string, char>> Tokenizer();
+            std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr);
+
+        private:
 
             /**
              * Evaluate precedence of operators.

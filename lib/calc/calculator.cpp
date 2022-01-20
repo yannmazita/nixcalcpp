@@ -48,25 +48,25 @@ namespace calc{
         return false;
     }
 
-    std::vector<std::pair<std::string, char>> Expression::Tokenizer(){
+    std::vector<std::pair<std::string, char>> Expression::Tokenizer(std::string inputExpr){
         std::vector<std::pair<std::string, char>> tokens;
         int jumpIdx = 0;   ///> Index of next non-digit char to jump to when storing numbers.
-        for (int i = 0; i < expr.size(); i++){
+        for (int i = 0; i < inputExpr.size(); i++){
             if (i < jumpIdx && i != 0){
                 // Jump characters until jumpIdx.
                 continue;
             }
-            if (IsOperator(CharToString(expr[i]))){
-                tokens.push_back(std::make_pair(CharToString(expr[i]), 'o'));
+            if (IsOperator(CharToString(inputExpr[i]))){
+                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'o'));
                 // make_pair() template function to make a std::pair with adequate types
             }
-            else if (expr[i] == '('){
-                tokens.push_back(std::make_pair(CharToString(expr[i]), 'l'));
+            else if (inputExpr[i] == '('){
+                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'l'));
             }
-            else if (expr[i] == ')'){
-                tokens.push_back(std::make_pair(CharToString(expr[i]), 'r'));
+            else if (inputExpr[i] == ')'){
+                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'r'));
             }
-            else if (std::isdigit(expr[i])){
+            else if (std::isdigit(inputExpr[i])){
                 jumpIdx = StoreNumber(i);
                 tokens.push_back(std::make_pair(tmpNumString, 'n'));
                 ClearNumber();
@@ -118,7 +118,7 @@ namespace calc{
         /*
          * Stack should not be evaluated when empty.
          */
-        std::vector<std::pair<std::string, char>> tokens = Tokenizer(); ///> Expression tokens.
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(expr); ///> Expression tokens.
         
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
