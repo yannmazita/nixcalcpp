@@ -4,13 +4,13 @@
 
 namespace calc{
     Expression::Expression(std::string inputExpr){
-        expr = inputExpr;
+        infixExpr = inputExpr;
     }  
 
     int Expression::StoreNumber(const int pos){
         int i = pos;
-        while (i < (int)expr.size() && (std::isdigit(expr[i]) || expr[i] == '.')){
-            tmpNumString.push_back(expr[i]);
+        while (i < (int)infixExpr.size() && (std::isdigit(infixExpr[i]) || infixExpr[i] == '.')){
+            tmpNumString.push_back(infixExpr[i]);
             i++;
         }
         return i;
@@ -112,18 +112,18 @@ namespace calc{
         std::cout << "\n";
     }
 
-    std::queue<std::string> Expression::PostfixConvert(){
+    std::queue<std::string> Expression::PostfixQueue(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
         /*
          * Stack should not be evaluated when empty.
          */
-        std::vector<std::pair<std::string, char>> tokens = Tokenizer(expr); ///> Expression tokens.
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(infixExpr); ///> Expression tokens.
         
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
                 outputQueue.push(tokens[i].first);
-                debugPrint(outputQueue, operatorStack);
+                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'o'){
                 while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
@@ -162,14 +162,17 @@ namespace calc{
         return outputQueue;
     }
     
-    void Expression::DisplayPostfix(){
-        
-        std::queue<std::string> que = PostfixConvert();
+    void Expression::PostfixConvert(){
+        std::queue<std::string> que = PostfixQueue();
         while (!que.empty()){
-            std::cout << que.front();
+            postfixExpr.append(que.front());
             que.pop();
         }
-        std::cout << "\n";
+    }
+
+    void Expression::DisplayPostfix(){
+        PostfixConvert();
+        std::cout << postfixExpr + "\n";
     }
 
     struct Node{

@@ -5,13 +5,17 @@
 #include <stack>
 
 namespace calc{
-    
+    class BinaryTree;   ///> Forward declaration of friend class BinaryTree.
+
     /**
      * Container for expressions input by user.
      */
     class Expression{
+        friend class calc::BinaryTree;
+
         private:
-            std::string expr;           ///> The current infix expression.
+            std::string infixExpr;      ///> Infix expression input by user.
+            std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
             std::string tmpNumString;   ///> Temporary number stored in string form.
         public:
             /**
@@ -19,7 +23,6 @@ namespace calc{
              * @param inputExpr the expression input by user.
              */
             Expression(std::string inputExpr);
-
         private:
             /**
              * Store number starting at specific position in the expression.
@@ -55,14 +58,11 @@ namespace calc{
              */
             bool IsLeftAssociative(std::string oper);
 
-        public:
             /**
              * Tokenize expression.
              * @return vector of pairs of strings with their assigned meaning.
              */
             std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr);
-
-        private:
 
             /**
              * Evaluate precedence of operators.
@@ -78,11 +78,16 @@ namespace calc{
             void debugPrint(std::queue<std::string> &outputQueue, std::stack<std::string> &operatorStack);
 
             /**
-             * Converts infix mathematical expression to postfix notation.
+             * Build postfix mathematical expression from infix expression.
              * @return queue of the converted expression.
              */
-            std::queue<std::string> PostfixConvert();
+            std::queue<std::string> PostfixQueue();
 
+            /**
+             * Convert postfix queue into string.
+             * The result is stored in 'postfixExpr'.
+             */
+            void PostfixConvert();
         public:
             void DisplayPostfix();
     };
@@ -95,10 +100,8 @@ namespace calc{
     class BinaryTree{
         private:
             Node* root;
-
         public:
             BinaryTree();
-
         private:
             /**
             * Find target in (sub)tree.
@@ -130,7 +133,6 @@ namespace calc{
             void Insert(std::string newData, Node* &node);
             // A reference to a pointer is used so as to keep
             // modifications of the pointer.
-
         public:
             int IsTargetInTree(std::string target);
             void InsertTarget(std::string newData);
