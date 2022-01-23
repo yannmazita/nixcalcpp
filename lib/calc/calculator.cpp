@@ -235,5 +235,12 @@ namespace calc{
     void BinaryTree::InsertTarget(std::string newData){
         BinaryTree::Insert(newData, root);
     }
+
+    void BinaryTree::Populate(){
+        std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
+        //Expression::PostfixConvert();
+        //std::vector<std::pair<std::string, char>> tokens = Expression::Tokenizer(Expression::postfixExpr); ///> Postfix expression tokens.
+
+    }
 }
 

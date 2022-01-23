@@ -5,13 +5,13 @@
 #include <stack>
 
 namespace calc{
-    class BinaryTree;   ///> Forward declaration of friend class BinaryTree.
+    //class BinaryTree;   ///> Forward declaration of friend class BinaryTree.
 
     /**
      * Container for expressions input by user.
      */
     class Expression{
-        friend class calc::BinaryTree;
+        //friend class calc::BinaryTree;
 
         private:
             std::string infixExpr;      ///> Infix expression input by user.
@@ -133,6 +133,11 @@ namespace calc{
             void Insert(std::string newData, Node* &node);
             // A reference to a pointer is used so as to keep
             // modifications of the pointer.
+
+            /**
+             * Populate the binary tree from the postfix expression.
+             */
+            void Populate();
         public:
             int IsTargetInTree(std::string target);
             void InsertTarget(std::string newData);
