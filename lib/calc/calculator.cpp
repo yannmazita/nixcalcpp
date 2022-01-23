@@ -181,8 +181,9 @@ namespace calc{
         Node* right;
     };
 
-    BinaryTree::BinaryTree(){
+    BinaryTree::BinaryTree(std::string inputExpr){
         root = NULL;
+        expr = new Expression (inputExpr);
     }
 
     int BinaryTree::Find(std::string target, Node* &node){
@@ -238,9 +239,25 @@ namespace calc{
 
     void BinaryTree::Populate(){
         std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
-        //Expression::PostfixConvert();
-        //std::vector<std::pair<std::string, char>> tokens = Expression::Tokenizer(Expression::postfixExpr); ///> Postfix expression tokens.
-
+        tokens = expr->Tokenizer(expr->postfixExpr);
+        for (int i = 0; (int)tokens.size(); i++){
+            if (tokens[i].second == 'n'){
+                Node* node = NewNode(tokens[i].first);
+                treeStack.push(node);
+            }
+            else if (tokens[i].second == 'o'){
+                Node* tmpArray[2];
+                tmpArray[0] = treeStack.top();
+                treeStack.pop();
+                tmpArray[1] = treeStack.top();
+                treeStack.pop();
+                
+                Node* nRoot = new Node;
+                nRoot->data = tokens[i].first;
+                nRoot->left = tmpArray[0];
+                nRoot->right = tmpArray[1];
+            }
+       }
     }
 }
 

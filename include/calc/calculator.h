@@ -5,19 +5,15 @@
 #include <stack>
 
 namespace calc{
-    //class BinaryTree;   ///> Forward declaration of friend class BinaryTree.
-
     /**
      * Container for expressions input by user.
      */
     class Expression{
-        //friend class calc::BinaryTree;
-
         private:
             std::string infixExpr;      ///> Infix expression input by user.
-            std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
             std::string tmpNumString;   ///> Temporary number stored in string form.
         public:
+            std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
             /**
              * Initialize infix expression.
              * @param inputExpr the expression input by user.
@@ -57,13 +53,13 @@ namespace calc{
              * @return true if left associative, false otherwise.
              */
             bool IsLeftAssociative(std::string oper);
-
+        public:
             /**
              * Tokenize expression.
              * @return vector of pairs of strings with their assigned meaning.
              */
             std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr);
-
+        private:
             /**
              * Evaluate precedence of operators.
              * @param Oper1 the first operator.
@@ -82,7 +78,7 @@ namespace calc{
              * @return queue of the converted expression.
              */
             std::queue<std::string> PostfixQueue();
-
+        public:
             /**
              * Convert postfix queue into string.
              * The result is stored in 'postfixExpr'.
@@ -100,8 +96,10 @@ namespace calc{
     class BinaryTree{
         private:
             Node* root;
+            Expression* expr;
+            std::vector<std::pair<std::string, char>> tokens;   ///> Postfix expression tokens.
         public:
-            BinaryTree();
+            BinaryTree(std::string inputExpr);
         private:
             /**
             * Find target in (sub)tree.
