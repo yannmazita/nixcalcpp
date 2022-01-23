@@ -80,10 +80,11 @@ namespace calc{
             std::queue<std::string> PostfixQueue();
         public:
             /**
-             * Convert postfix queue into string.
-             * The result is stored in 'postfixExpr'.
+             * Store postfix conversion of infix expression.
+             * PostfixQueue() is used to build a postfix queue that is then converted to
+             * a string stored in 'postfixExpr'.
              */
-            void PostfixConvert();
+            void PostfixStore();
         public:
             void DisplayPostfix();
     };
@@ -95,7 +96,6 @@ namespace calc{
 
     class BinaryTree{
         private:
-            Node* root;
             Expression* expr;
             std::vector<std::pair<std::string, char>> tokens;   ///> Postfix expression tokens.
         public:
@@ -107,7 +107,7 @@ namespace calc{
              * @return pointer to the the new node.
              */
             Node* NewNode(std::string newData);
-
+        public:
             /**
              * Populate the binary tree from the postfix expression.
              */

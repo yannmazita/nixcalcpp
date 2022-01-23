@@ -118,7 +118,7 @@ namespace calc{
         /*
          * Stack should not be evaluated when empty.
          */
-        std::vector<std::pair<std::string, char>> tokens = Tokenizer(infixExpr); ///> Expression tokens.
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(infixExpr); ///> Infix expression tokens.
         
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
@@ -162,7 +162,7 @@ namespace calc{
         return outputQueue;
     }
     
-    void Expression::PostfixConvert(){
+    void Expression::PostfixStore(){
         std::queue<std::string> que = PostfixQueue();
         while (!que.empty()){
             postfixExpr.append(que.front());
@@ -171,7 +171,6 @@ namespace calc{
     }
 
     void Expression::DisplayPostfix(){
-        PostfixConvert();
         std::cout << postfixExpr + "\n";
     }
 
@@ -182,7 +181,6 @@ namespace calc{
     };
 
     BinaryTree::BinaryTree(std::string inputExpr){
-        root = NULL;
         expr = new Expression (inputExpr);
     }
 
@@ -196,25 +194,35 @@ namespace calc{
 
     void BinaryTree::Populate(){
         std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
+        expr->PostfixStore();
         tokens = expr->Tokenizer(expr->postfixExpr);
-        for (int i = 0; (int)tokens.size(); i++){
+        for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
-                Node* node = NewNode(tokens[i].first);
-                treeStack.push(node);
+                treeStack.push(NewNode(tokens[i].first));
             }
             else if (tokens[i].second == 'o'){
                 Node* tmpArray[2];
+                /*
+                if (!treeStack.empty()){
+                    tmpArray[0] = treeStack.top();
+                    treeStack.pop();
+                }
+                if (!treeStack.empty()){
+                    tmpArray[1] = treeStack.top();
+                    treeStack.pop();
+                }*/
                 tmpArray[0] = treeStack.top();
                 treeStack.pop();
                 tmpArray[1] = treeStack.top();
                 treeStack.pop();
                 
-                Node* nRoot = new Node;
-                nRoot->data = tokens[i].first;
-                nRoot->left = tmpArray[0];
-                nRoot->right = tmpArray[1];
+                treeStack.push(NewNode(tokens[i].first));
+                treeStack.top()->left = tmpArray[0];
+                treeStack.top()->right = tmpArray[1];
             }
-       }
+        }
+        std::cout << treeStack.top()->data + "\n";
+        expr->DisplayPostfix();
     }
 }
 
