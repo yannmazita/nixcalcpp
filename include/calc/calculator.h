@@ -70,7 +70,7 @@ namespace calc{
              * @param operator2 the second operator.
              * @return 1 if operator1 has precendence, -1 if operator2, 0 if same.
              */
-            int Precedence(std::string operator1, std::string operator2);
+            int GetPrecedence(std::string operator1, std::string operator2);
         private:
             /**
              * Build postfix mathematical expression from infix expression.

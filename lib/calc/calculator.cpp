@@ -83,19 +83,19 @@ namespace calc{
         return tokens;
     }
 
-    int Expression::Precedence(std::string operator1, std::string operator2){
+    int Expression::GetPrecedence(std::string operator1, std::string operator2){
         char arr[10] = {'^','1','*','2','/','2','+','3','-','3'};   ///> Precedence array, lowest number means highest precedence.
-        char arrPrecedence[2];  ///> Precedence of given operators, first value for 'operator1', second value for 'operator2'.
+        char arrGetPrecedence[2];  ///> Precedence of given operators, first value for 'operator1', second value for 'operator2'.
         for (int i = 0; i < 10; i += 2){
             if (operator1 == BuildStringFromChar(arr[i])){
-                arrPrecedence[0] = arr[i + 1];
+                arrGetPrecedence[0] = arr[i + 1];
             } else if (operator2 == BuildStringFromChar(arr[i])){
-                arrPrecedence[1] = arr[i + 1];
+                arrGetPrecedence[1] = arr[i + 1];
             }
         }
-        if (arrPrecedence[0] < arrPrecedence[1]){
+        if (arrGetPrecedence[0] < arrGetPrecedence[1]){
             return 1;
-        } else if (arrPrecedence[1] < arrPrecedence[0]){
+        } else if (arrGetPrecedence[1] < arrGetPrecedence[0]){
             return -1;
         } else {
             return 0;
@@ -115,7 +115,7 @@ namespace calc{
             }
             else if (tokens[i].second == 'o'){
                 while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != BuildStringFromChar('(')) &&
-                        (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) &&
+                        (GetPrecedence(operatorStack.top(), tokens[i].first)==1 || ((GetPrecedence(operatorStack.top(), tokens[i].first)==0) &&
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
