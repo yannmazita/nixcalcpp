@@ -196,7 +196,6 @@ namespace calc{
                 treeStack.top()->right = tmpArray[1];
             }
         }
-        std::cout << "nice\n";
     }
 }
 

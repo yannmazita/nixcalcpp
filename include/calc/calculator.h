@@ -14,6 +14,7 @@ namespace calc{
         public:
             std::string infixExpr;      ///> Infix expression input by user.
             std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
+            bool isIntegerOnly;         ///> Whether operands or the operator need only integers.
 
             /**
              * Initialize infix expression.
@@ -71,7 +72,6 @@ namespace calc{
              * @return 1 if operator1 has precendence, -1 if operator2, 0 if same.
              */
             int GetPrecedence(std::string operator1, std::string operator2);
-        private:
             /**
              * Build postfix mathematical expression from infix expression.
              * @return queue of the converted expression.
@@ -110,5 +110,12 @@ namespace calc{
              * Populate the binary tree from the postfix expression.
              */
             void Populate();
+
+            /**
+             * Evaluate (binary) expression tree.
+             * @param node starting node for evaluation.
+             */
+            template<typename T> T Evaluate(Node* node){
+            };
     };
 }
