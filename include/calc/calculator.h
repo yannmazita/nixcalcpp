@@ -71,8 +71,6 @@ namespace calc{
              * @return 1 if oper1 has precendence, -1 if oper2, 0 if same.
              */
             int Precedence(std::string oper1, std::string oper2);
-        public:
-            void debugTokens(std::vector<std::pair<std::string, char>> &inpPair);
         private:
             /**
              * Build postfix mathematical expression from infix expression.

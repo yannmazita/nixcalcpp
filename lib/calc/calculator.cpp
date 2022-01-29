@@ -19,7 +19,6 @@ namespace calc{
                 tmpNumString.push_back(postfixExpr[i]);
                 i++;
             }
- 
         }
         return i;
     }
@@ -81,7 +80,6 @@ namespace calc{
             }
             // Implement function tokenization.
         }
-
         return tokens;
     }
 
@@ -103,14 +101,6 @@ namespace calc{
             return 0;
         }
     }
-
-    void Expression::debugTokens(std::vector<std::pair<std::string, char>> &tokenVector){
-        for (int i = 0; i < (int)tokenVector.size(); i++){
-            std::cout << tokenVector[i].first + ":" + tokenVector[i].second + ", ";
-        }
-        std::cout << "\n";
-    }
-
 
     std::queue<std::string> Expression::PostfixQueue(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
@@ -190,10 +180,6 @@ namespace calc{
         std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
         expr->PostfixStore();
         tokens = expr->Tokenizer(expr->postfixExpr, "post");
-        expr->debugTokens(tokens);
-
-        std::cout << expr->infixExpr + "\n";
-        std::cout << expr->postfixExpr + "\n";
 
         Node* tmpArray[2];
         for (int i = 0; i < (int)tokens.size(); i++){
