@@ -10,10 +10,11 @@ namespace calc{
      */
     class Expression{
         private:
-            std::string infixExpr;      ///> Infix expression input by user.
             std::string tmpNumString;   ///> Temporary number stored in string form.
         public:
+            std::string infixExpr;      ///> Infix expression input by user.
             std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
+
             /**
              * Initialize infix expression.
              * @param inputExpr the expression input by user.
@@ -23,9 +24,10 @@ namespace calc{
             /**
              * Store number starting at specific position in the expression.
              * @param pos position of the character of the number.
+             * @param type either "in" for infix or "post" for postfix.
              * @return position+1 of the last character of the number.
              */
-            int StoreNumber(const int pos);
+            int StoreNumber(const int pos, std::string type);
 
             /**
              * Clear current number stored in string form.
@@ -56,9 +58,11 @@ namespace calc{
         public:
             /**
              * Tokenize expression.
+             * @param inputExpr the expression to tokenize.
+             * @param type either "in" for infix or "post" for postfix.
              * @return vector of pairs of strings with their assigned meaning.
              */
-            std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr);
+            std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr, std::string type);
         private:
             /**
              * Evaluate precedence of operators.
@@ -67,12 +71,9 @@ namespace calc{
              * @return 1 if oper1 has precendence, -1 if oper2, 0 if same.
              */
             int Precedence(std::string oper1, std::string oper2);
-
-            /**
-             * Print content of outputQueue and operatorStack.
-             */
-            void debugPrint(std::queue<std::string> &outputQueue, std::stack<std::string> &operatorStack);
-
+        public:
+            void debugTokens(std::vector<std::pair<std::string, char>> &inpPair);
+        private:
             /**
              * Build postfix mathematical expression from infix expression.
              * @return queue of the converted expression.
@@ -85,8 +86,6 @@ namespace calc{
              * a string stored in 'postfixExpr'.
              */
             void PostfixStore();
-        public:
-            void DisplayPostfix();
     };
 
     /**

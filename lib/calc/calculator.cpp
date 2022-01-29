@@ -7,11 +7,19 @@ namespace calc{
         infixExpr = inputExpr;
     }  
 
-    int Expression::StoreNumber(const int pos){
+    int Expression::StoreNumber(const int pos, std::string type){
         int i = pos;
-        while (i < (int)infixExpr.size() && (std::isdigit(infixExpr[i]) || infixExpr[i] == '.')){
-            tmpNumString.push_back(infixExpr[i]);
-            i++;
+        if (type == "in"){
+            while (i < (int)infixExpr.size() && (std::isdigit(infixExpr[i]) || infixExpr[i] == '.')){
+                tmpNumString.push_back(infixExpr[i]);
+                i++;
+            }
+        } else if (type == "post"){
+            while (i < (int)postfixExpr.size() && (std::isdigit(postfixExpr[i]) || postfixExpr[i] == '.')){
+                tmpNumString.push_back(postfixExpr[i]);
+                i++;
+            }
+ 
         }
         return i;
     }
@@ -48,7 +56,7 @@ namespace calc{
         return false;
     }
 
-    std::vector<std::pair<std::string, char>> Expression::Tokenizer(std::string inputExpr){
+    std::vector<std::pair<std::string, char>> Expression::Tokenizer(std::string inputExpr, std::string type){
         std::vector<std::pair<std::string, char>> tokens;
         int jumpIdx = 0;   ///> Index of next non-digit char to jump to when storing numbers.
         for (int i = 0; i < inputExpr.size(); i++){
@@ -67,12 +75,13 @@ namespace calc{
                 tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'r'));
             }
             else if (std::isdigit(inputExpr[i])){
-                jumpIdx = StoreNumber(i);
+                jumpIdx = StoreNumber(i, type);
                 tokens.push_back(std::make_pair(tmpNumString, 'n'));
                 ClearNumber();
             }
             // Implement function tokenization.
         }
+
         return tokens;
     }
 
@@ -95,35 +104,24 @@ namespace calc{
         }
     }
 
-    void Expression::debugPrint(std::queue<std::string> &outputQueue, std::stack<std::string> &operatorStack){
-        std::queue<std::string> tmpQueue = outputQueue;
-        std::stack<std::string> tmpStack = operatorStack;
-        
-        std::cout << "outputQueue = ";
-        while (!tmpQueue.empty()){
-            std::cout << tmpQueue.front();
-            tmpQueue.pop();
-        }
-        std::cout << " ; operatorStack = ";
-        while (!tmpStack.empty()){
-            std::cout << tmpStack.top();
-            tmpStack.pop();
+    void Expression::debugTokens(std::vector<std::pair<std::string, char>> &tokenVector){
+        for (int i = 0; i < (int)tokenVector.size(); i++){
+            std::cout << tokenVector[i].first + ":" + tokenVector[i].second + ", ";
         }
         std::cout << "\n";
     }
 
+
     std::queue<std::string> Expression::PostfixQueue(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
-        /*
-         * Stack should not be evaluated when empty.
-         */
-        std::vector<std::pair<std::string, char>> tokens = Tokenizer(infixExpr); ///> Infix expression tokens.
+        //Stack should not be evaluated when empty. 
+
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(infixExpr, "in"); ///> Infix expression tokens.
         
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
                 outputQueue.push(tokens[i].first);
-                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'o'){
                 while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
@@ -131,24 +129,19 @@ namespace calc{
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
-                    //debugPrint(outputQueue, operatorStack);
                 }
                 operatorStack.push(tokens[i].first);
-                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'l'){
                 operatorStack.push(tokens[i].first);
-                //debugPrint(outputQueue, operatorStack);
             }
             else if (tokens[i].second == 'r'){
                 while(!operatorStack.empty() && (operatorStack.top() != CharToString('('))){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
-                    //debugPrint(outputQueue, operatorStack);
                 }
                 if (!operatorStack.empty() && operatorStack.top() == CharToString('(')){
                     operatorStack.pop();
-                    //debugPrint(outputQueue, operatorStack);
                 }
             }
         }
@@ -156,7 +149,6 @@ namespace calc{
             if (operatorStack.top() != CharToString('(')){
                 outputQueue.push(operatorStack.top());
                 operatorStack.pop();
-                //debugPrint(outputQueue, operatorStack);
             }
         }
         return outputQueue;
@@ -166,12 +158,14 @@ namespace calc{
         std::queue<std::string> que = PostfixQueue();
         while (!que.empty()){
             postfixExpr.append(que.front());
+            postfixExpr.append(" ");
+            // Appending spaces because operands are no longer separated by operators.
             que.pop();
         }
-    }
-
-    void Expression::DisplayPostfix(){
-        std::cout << postfixExpr + "\n";
+        if (postfixExpr.size() > 1){
+            postfixExpr.replace(postfixExpr.begin(), postfixExpr.end(), postfixExpr.begin(), postfixExpr.end()-1);
+        }
+        // Removing the trailing space might be pointless.
     }
 
     struct Node{
@@ -195,34 +189,28 @@ namespace calc{
     void BinaryTree::Populate(){
         std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
         expr->PostfixStore();
-        tokens = expr->Tokenizer(expr->postfixExpr);
+        tokens = expr->Tokenizer(expr->postfixExpr, "post");
+        expr->debugTokens(tokens);
+
+        std::cout << expr->infixExpr + "\n";
+        std::cout << expr->postfixExpr + "\n";
+
+        Node* tmpArray[2];
         for (int i = 0; i < (int)tokens.size(); i++){
             if (tokens[i].second == 'n'){
                 treeStack.push(NewNode(tokens[i].first));
             }
             else if (tokens[i].second == 'o'){
-                Node* tmpArray[2];
-                /*
-                if (!treeStack.empty()){
-                    tmpArray[0] = treeStack.top();
-                    treeStack.pop();
-                }
-                if (!treeStack.empty()){
-                    tmpArray[1] = treeStack.top();
-                    treeStack.pop();
-                }*/
-                tmpArray[0] = treeStack.top();
-                treeStack.pop();
                 tmpArray[1] = treeStack.top();
                 treeStack.pop();
-                
+                tmpArray[0] = treeStack.top();
+                treeStack.pop();
+
                 treeStack.push(NewNode(tokens[i].first));
                 treeStack.top()->left = tmpArray[0];
                 treeStack.top()->right = tmpArray[1];
             }
         }
-        std::cout << treeStack.top()->data + "\n";
-        expr->DisplayPostfix();
     }
 }
 
