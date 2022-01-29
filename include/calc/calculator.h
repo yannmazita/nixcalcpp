@@ -104,7 +104,7 @@ namespace calc{
              * @return pointer to the the new node.
              */
             Node* NewNode(std::string newData);
-        public:
+
             /**
              * Populate the binary tree from the postfix expression.
              */
