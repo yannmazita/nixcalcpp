@@ -14,7 +14,7 @@ namespace calc{
             std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
             std::string tmpNumString;   ///> Temporary number stored in string form.
         public:
-           bool isIntegerOnly;         ///> Whether operands or the operator need only integers.
+           bool isIntegerOnly = true;   ///> Whether operands or the operator need only integers.
 
             /**
              * Initialize infix expression.
@@ -24,6 +24,9 @@ namespace calc{
         private:
             /**
              * Store number starting at specific position in the expression.
+             * This method stores in 'tmpNumString' the number starting at a specific position.
+             * That position and the return value allows to "skip" numbers in the expression if wanted.
+             * The method also changes the bool isIntegerOnly whether a decimal number is stored.
              * @param pos position of the character of the number.
              * @param type either "in" for infix or "post" for postfix.
              * @return position+1 of the last character of the number.
@@ -32,11 +35,12 @@ namespace calc{
 
             /**
              * Clear current number stored in string form.
+             * This method simply clears the string 'tmpNumString'.
              */
             void ClearNumber();
 
             /**
-             * Convert single character to string.
+             * Build string from single character.
              * @param character to build from.
              * @return the string.
              */
@@ -44,7 +48,7 @@ namespace calc{
 
             /**
              * Evaluate whether character is an operator.
-             * The character has to be converted to string.
+             * The character has to be a string. Use BuildStringFromChar if needed.
              * @param chr the character.
              * @return true if character is an operetor, false otherwise.
              */
@@ -59,6 +63,8 @@ namespace calc{
 
             /**
              * Tokenize expression.
+             * This method makes tokens out of an expression. A pair consists of a token value,
+             * ('+', '1'...) and a token name ('o' for operator, 'n' for number...).
              * @param inputExpr the expression to tokenize.
              * @param type either "in" for infix or "post" for postfix.
              * @return vector of pairs of strings with their assigned meaning.
