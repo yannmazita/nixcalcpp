@@ -27,17 +27,17 @@ namespace calc{
         tmpNumString.clear();
     }
 
-    std::string Expression::CharToString(char chr){
-        std::string str{chr};
+    std::string Expression::BuildStringFromChar(char character){
+        std::string str{character};
         return str;
     }
 
     bool Expression::IsOperator(std::string chr){
-        if (chr == CharToString('+') ||
-                chr == CharToString('-') ||
-                chr == CharToString('*') ||
-                chr == CharToString('/') ||
-                chr == CharToString('^')){
+        if (chr == BuildStringFromChar('+') ||
+                chr == BuildStringFromChar('-') ||
+                chr == BuildStringFromChar('*') ||
+                chr == BuildStringFromChar('/') ||
+                chr == BuildStringFromChar('^')){
             return true;
         }
         else{
@@ -46,10 +46,10 @@ namespace calc{
     }
 
     bool Expression::IsLeftAssociative(std::string oper){
-        if (oper == CharToString('-') ||
-                oper == CharToString('/') ||
-                oper == CharToString('+') ||
-                oper == CharToString('*')){
+        if (oper == BuildStringFromChar('-') ||
+                oper == BuildStringFromChar('/') ||
+                oper == BuildStringFromChar('+') ||
+                oper == BuildStringFromChar('*')){
             return true;
         }
         return false;
@@ -63,15 +63,15 @@ namespace calc{
                 // Jump characters until jumpIdx.
                 continue;
             }
-            if (IsOperator(CharToString(inputExpr[i]))){
-                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'o'));
+            if (IsOperator(BuildStringFromChar(inputExpr[i]))){
+                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'o'));
                 // make_pair() template function to make a std::pair with adequate types
             }
             else if (inputExpr[i] == '('){
-                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'l'));
+                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'l'));
             }
             else if (inputExpr[i] == ')'){
-                tokens.push_back(std::make_pair(CharToString(inputExpr[i]), 'r'));
+                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'r'));
             }
             else if (std::isdigit(inputExpr[i])){
                 jumpIdx = StoreNumber(i, type);
@@ -83,13 +83,13 @@ namespace calc{
         return tokens;
     }
 
-    int Expression::Precedence(std::string oper1, std::string oper2){
+    int Expression::Precedence(std::string operator1, std::string operator2){
         char arr[10] = {'^','1','*','2','/','2','+','3','-','3'};   ///> Precedence array, lowest number means highest precedence.
-        char arrPrecedence[2];  ///> Precedence of given operators, first value for 'oper1', second value for 'oper2'.
+        char arrPrecedence[2];  ///> Precedence of given operators, first value for 'operator1', second value for 'operator2'.
         for (int i = 0; i < 10; i += 2){
-            if (oper1 == CharToString(arr[i])){
+            if (operator1 == BuildStringFromChar(arr[i])){
                 arrPrecedence[0] = arr[i + 1];
-            } else if (oper2 == CharToString(arr[i])){
+            } else if (operator2 == BuildStringFromChar(arr[i])){
                 arrPrecedence[1] = arr[i + 1];
             }
         }
@@ -102,7 +102,7 @@ namespace calc{
         }
     }
 
-    std::queue<std::string> Expression::PostfixQueue(){
+    std::queue<std::string> Expression::BuildPostfixQueue(){
         std::queue<std::string> outputQueue;    ///> First in, first out container.
         std::stack<std::string> operatorStack;  ///> Last in, first out container.
         //Stack should not be evaluated when empty. 
@@ -114,7 +114,7 @@ namespace calc{
                 outputQueue.push(tokens[i].first);
             }
             else if (tokens[i].second == 'o'){
-                while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != CharToString('(')) &&
+                while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != BuildStringFromChar('(')) &&
                         (Precedence(operatorStack.top(), tokens[i].first)==1 || ((Precedence(operatorStack.top(), tokens[i].first)==0) &&
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
@@ -126,17 +126,17 @@ namespace calc{
                 operatorStack.push(tokens[i].first);
             }
             else if (tokens[i].second == 'r'){
-                while(!operatorStack.empty() && (operatorStack.top() != CharToString('('))){
+                while(!operatorStack.empty() && (operatorStack.top() != BuildStringFromChar('('))){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
                 }
-                if (!operatorStack.empty() && operatorStack.top() == CharToString('(')){
+                if (!operatorStack.empty() && operatorStack.top() == BuildStringFromChar('(')){
                     operatorStack.pop();
                 }
             }
         }
         while (!operatorStack.empty()){
-            if (operatorStack.top() != CharToString('(')){
+            if (operatorStack.top() != BuildStringFromChar('(')){
                 outputQueue.push(operatorStack.top());
                 operatorStack.pop();
             }
@@ -144,8 +144,8 @@ namespace calc{
         return outputQueue;
     }
     
-    void Expression::PostfixStore(){
-        std::queue<std::string> que = PostfixQueue();
+    void Expression::BuildPostfixString(){
+        std::queue<std::string> que = BuildPostfixQueue();
         while (!que.empty()){
             postfixExpr.append(que.front());
             postfixExpr.append(" ");
@@ -177,8 +177,7 @@ namespace calc{
     }
 
     void BinaryTree::Populate(){
-        std::stack<Node*> treeStack;    ///> Stack of pointers to nodes.
-        expr->PostfixStore();
+        expr->BuildPostfixString();
         tokens = expr->Tokenizer(expr->postfixExpr, "post");
 
         Node* tmpArray[2];
@@ -197,6 +196,7 @@ namespace calc{
                 treeStack.top()->right = tmpArray[1];
             }
         }
+        std::cout << "nice\n";
     }
 }
 

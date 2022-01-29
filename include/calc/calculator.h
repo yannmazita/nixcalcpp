@@ -36,10 +36,10 @@ namespace calc{
 
             /**
              * Convert single character to string.
-             * @param chr the character to convert.
-             * @return the converted character.
+             * @param character to build from.
+             * @return the string.
              */
-            std::string CharToString(char chr);
+            std::string BuildStringFromChar(char character);
 
             /**
              * Evaluate whether character is an operator.
@@ -66,24 +66,24 @@ namespace calc{
         private:
             /**
              * Evaluate precedence of operators.
-             * @param Oper1 the first operator.
-             * @param Oper2 the second operator.
-             * @return 1 if oper1 has precendence, -1 if oper2, 0 if same.
+             * @param operator1 the first operator.
+             * @param operator2 the second operator.
+             * @return 1 if operator1 has precendence, -1 if operator2, 0 if same.
              */
-            int Precedence(std::string oper1, std::string oper2);
+            int Precedence(std::string operator1, std::string operator2);
         private:
             /**
              * Build postfix mathematical expression from infix expression.
              * @return queue of the converted expression.
              */
-            std::queue<std::string> PostfixQueue();
+            std::queue<std::string> BuildPostfixQueue();
         public:
             /**
-             * Store postfix conversion of infix expression.
-             * PostfixQueue() is used to build a postfix queue that is then converted to
+             * Build postfix expression from infix expression.
+             * BuildPostfixQueue() is used to build a postfix queue that is then converted to
              * a string stored in 'postfixExpr'.
              */
-            void PostfixStore();
+            void BuildPostfixString();
     };
 
     /**
@@ -95,6 +95,7 @@ namespace calc{
         private:
             Expression* expr;
             std::vector<std::pair<std::string, char>> tokens;   ///> Postfix expression tokens.
+            std::stack<Node*> treeStack;                        ///> Stack of pointers to nodes.
         public:
             BinaryTree(std::string inputExpr);
         private:
