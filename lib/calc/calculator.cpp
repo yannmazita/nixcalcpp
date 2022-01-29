@@ -79,6 +79,7 @@ namespace calc{
                 ClearNumber();
             }
             // Implement function tokenization.
+            // Update isIntegerOnly to false when using mathematical functions.
         }
         return tokens;
     }
@@ -162,12 +163,6 @@ namespace calc{
         }
         // Removing the trailing space might be pointless.
     }
-
-    struct Node{
-        std::string data;
-        Node* left;
-        Node* right;
-    };
 
     BinaryTree::BinaryTree(std::string inputExpr){
         expr = new Expression (inputExpr);

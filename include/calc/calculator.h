@@ -101,14 +101,20 @@ namespace calc{
 
     /**
      * Structure of a tree.
+     * Implemented here because the complete Node type is needed in templates.
      */
-    struct Node;
+    struct Node{
+        std::string data;
+        Node* left;
+        Node* right;
+    };
+
 
     class BinaryTree{
         private:
             Expression* expr;
             std::vector<std::pair<std::string, char>> tokens;   ///> Postfix expression tokens.
-            std::stack<Node*> treeStack;                        ///> Stack of pointers to nodes.
+            static std::stack<Node*> treeStack;                 ///> Stack of pointers to nodes.
         public:
             BinaryTree(std::string inputExpr);
         private:
@@ -126,9 +132,21 @@ namespace calc{
 
             /**
              * Evaluate (binary) expression tree.
+             * @tparam T the type of numbers handled.
              * @param node starting node for evaluation.
              */
-            template<typename T> T Evaluate(Node* node){
+            template<typename T> T Evaluate(Node* node = treeStack.top()){
+                if (node == NULL){
+                    return 0;
+                }
+                if (node->left == NULL && node->right == NULL){
+                    if (expr->isIntegerOnly){
+                        return std::stoi(node->data);
+                    }
+                    else {
+                        return std::stof(node->data);
+                    }
+                }
             };
     };
 }
