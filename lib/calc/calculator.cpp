@@ -83,6 +83,11 @@ namespace calc{
         return tokens;
     }
 
+    std::vector<std::pair<std::string, char>> Expression::Tokenizer(){
+        std::vector<std::pair<std::string, char>> tokens = Tokenizer(postfixExpr, "post");
+        return tokens;
+    }
+
     int Expression::GetPrecedence(std::string operator1, std::string operator2){
         char arr[10] = {'^','1','*','2','/','2','+','3','-','3'};   ///> Precedence array, lowest number means highest precedence.
         char arrGetPrecedence[2];  ///> Precedence of given operators, first value for 'operator1', second value for 'operator2'.
@@ -178,7 +183,7 @@ namespace calc{
 
     void BinaryTree::Populate(){
         expr->BuildPostfixString();
-        tokens = expr->Tokenizer(expr->postfixExpr, "post");
+        tokens = expr->Tokenizer();
 
         Node* tmpArray[2];
         for (int i = 0; i < (int)tokens.size(); i++){

@@ -10,11 +10,11 @@ namespace calc{
      */
     class Expression{
         private:
-            std::string tmpNumString;   ///> Temporary number stored in string form.
-        public:
             std::string infixExpr;      ///> Infix expression input by user.
             std::string postfixExpr;    ///> Postfix conversion of 'infixExpr'.
-            bool isIntegerOnly;         ///> Whether operands or the operator need only integers.
+            std::string tmpNumString;   ///> Temporary number stored in string form.
+        public:
+           bool isIntegerOnly;         ///> Whether operands or the operator need only integers.
 
             /**
              * Initialize infix expression.
@@ -56,7 +56,7 @@ namespace calc{
              * @return true if left associative, false otherwise.
              */
             bool IsLeftAssociative(std::string oper);
-        public:
+
             /**
              * Tokenize expression.
              * @param inputExpr the expression to tokenize.
@@ -64,6 +64,13 @@ namespace calc{
              * @return vector of pairs of strings with their assigned meaning.
              */
             std::vector<std::pair<std::string, char>> Tokenizer(std::string inputExpr, std::string type);
+        public:
+            /**
+             * Tokenize postfix expression.
+             * Public version of Tokenizer this time only tokenizing the postfix expression.
+             * @return vector of pairs of strings with their assigned meaning.
+             */
+            std::vector<std::pair<std::string, char>> Tokenizer();
         private:
             /**
              * Evaluate precedence of operators.
