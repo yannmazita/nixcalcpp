@@ -41,12 +41,11 @@ namespace calc{
             void ClearNumber();
 
             /**
-             * Evaluate whether character is an operator.
-             * The character has to be a string.
-             * @param chr the character.
+             * Evaluate whether a string is an operator.
+             * @param inputString the string.
              * @return true if character is an operetor, false otherwise.
              */
-            bool IsOperator(std::string chr);
+            bool IsOperator(std::string inputString);
 
             /** Evaluate whether operator is left associative.
              * The operator has to be converted to string.

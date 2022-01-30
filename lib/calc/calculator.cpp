@@ -30,20 +30,19 @@ namespace calc{
         tmpNumString.clear();
     }
 
-    bool Expression::IsOperator(std::string chr){
-        if (chr == std::string {'^'}){
-            isIntegerOnly = false;
-            return true;
-        }
-        if (chr == std::string{'/'}){
+    bool Expression::IsOperator(std::string inputString){
+        if (inputString == std::string {'^'} ||
+                inputString == std::string {'/'} ||
+                inputString == "exp" ||
+                inputString == "ln"){
             isIntegerOnly = false;
             return true;
         }
         // Update isIntegerOnly to false when using additional mathematical functions.
         
-        if (chr == std::string {'+'} ||
-                chr == std::string {'-'} ||
-                chr == std::string {'*'}){
+        if (inputString == std::string {'+'} ||
+                inputString == std::string {'-'} ||
+                inputString == std::string {'*'}){
             return true;
         }
         else{
