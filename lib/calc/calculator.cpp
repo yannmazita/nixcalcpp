@@ -30,11 +30,6 @@ namespace calc{
         tmpNumString.clear();
     }
 
-    std::string Expression::BuildStringFromChar(char character){
-        std::string str{character};
-        return str;
-    }
-
     bool Expression::IsOperator(std::string chr){
         if (chr == std::string {'^'}){
             isIntegerOnly = false;
