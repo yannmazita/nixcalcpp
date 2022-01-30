@@ -11,6 +11,9 @@ namespace calc{
         int i = pos;
         if (type == "in"){
             while (i < (int)infixExpr.size() && (std::isdigit(infixExpr[i]) || infixExpr[i] == '.')){
+                if (infixExpr[i] == '.'){
+                    isIntegerOnly = false;
+                }
                 tmpNumString.push_back(infixExpr[i]);
                 i++;
             }
