@@ -33,11 +33,16 @@ namespace calc{
     }
 
     bool Expression::IsOperator(std::string chr){
+        if (chr == BuildStringFromChar('^')){
+            isIntegerOnly = false;
+            return true;
+        }
+        // Update isIntegerOnly to false when using additional mathematical functions.
+        
         if (chr == BuildStringFromChar('+') ||
                 chr == BuildStringFromChar('-') ||
                 chr == BuildStringFromChar('*') ||
-                chr == BuildStringFromChar('/') ||
-                chr == BuildStringFromChar('^')){
+                chr == BuildStringFromChar('/')){
             return true;
         }
         else{
@@ -79,7 +84,6 @@ namespace calc{
                 ClearNumber();
             }
             // Implement function tokenization.
-            // Update isIntegerOnly to false when using mathematical functions.
         }
         return tokens;
     }
