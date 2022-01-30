@@ -178,6 +178,10 @@ namespace calc{
                     return leftOperand * rightOperand;
                 }
                 else if (node->data == std::string {'/'}){
+                    if (rightOperand == 0){
+                        std::cout << "Division by zero.";
+                        return 0;
+                    }
                     return leftOperand / rightOperand;
                 }
                 else if (node->data == std::string {'^'}){
