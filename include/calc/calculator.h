@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
+#include <math.h>
 
 namespace calc{
     /**
@@ -139,6 +140,7 @@ namespace calc{
                 if (node == NULL){
                     return 0;
                 }
+                // Leaf nodes are the only nodes with numbers.
                 if (node->left == NULL && node->right == NULL){
                     if (expr->isIntegerOnly){
                         return std::stoi(node->data);
@@ -146,6 +148,30 @@ namespace calc{
                     else {
                         return std::stof(node->data);
                     }
+                }
+
+                T leftOperand;
+                T rightOperand;
+                if (expr->isIntegerOnly){
+                    leftOperand = Evaluate<int>(node->left);
+                    rightOperand = Evaluate<int>(node->right);
+                }
+                else{
+                    leftOperand = Evaluate<double>(node->left);
+                    rightOperand = Evaluate<double>(node->right);
+                }
+
+                if (node->data == std::string {'+'}){
+                    return leftOperand + rightOperand;
+                }
+                else if (node->data == std::string {'-'}){
+                    return leftOperand - rightOperand;
+                }
+                else if (node->data == std::string {'*'}){
+                    return leftOperand * rightOperand;
+                }
+                else if (node->data == std::string {'^'}){
+                    return pow(leftOperand, rightOperand);
                 }
             };
     };
