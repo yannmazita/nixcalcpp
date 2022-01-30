@@ -37,12 +37,15 @@ namespace calc{
             isIntegerOnly = false;
             return true;
         }
+        if (chr == BuildStringFromChar('/')){
+            isIntegerOnly = false;
+            return true;
+        }
         // Update isIntegerOnly to false when using additional mathematical functions.
         
         if (chr == BuildStringFromChar('+') ||
                 chr == BuildStringFromChar('-') ||
-                chr == BuildStringFromChar('*') ||
-                chr == BuildStringFromChar('/')){
+                chr == BuildStringFromChar('*')){
             return true;
         }
         else{
@@ -180,9 +183,10 @@ namespace calc{
         return node;
     }
 
-    void BinaryTree::Populate(){
+    Node* BinaryTree::BuildExpressionTree(){
         expr->BuildPostfixString();
         tokens = expr->Tokenizer();
+        std::stack<Node*> treeStack;                 ///> Stack of pointers to nodes.
 
         Node* tmpArray[2];
         for (int i = 0; i < (int)tokens.size(); i++){
@@ -199,6 +203,18 @@ namespace calc{
                 treeStack.top()->left = tmpArray[0];
                 treeStack.top()->right = tmpArray[1];
             }
+        }
+        return treeStack.top();
+    }
+    void BinaryTree::ComputeAndDisplay(){
+        Node* tree = BuildExpressionTree();
+        if (expr->isIntegerOnly){
+            std::cout << EvaluateExpressionTree<int>(tree);
+            std::cout << "\n";
+        }
+        else {
+            std::cout << EvaluateExpressionTree<double>(tree);
+            std::cout << "\n";
         }
     }
 }

@@ -3,7 +3,7 @@
 #include <vector>
 #include <queue>
 #include <stack>
-#include <math.h>
+#include <cmath>
 
 namespace calc{
     /**
@@ -115,7 +115,6 @@ namespace calc{
         private:
             Expression* expr;
             std::vector<std::pair<std::string, char>> tokens;   ///> Postfix expression tokens.
-            static std::stack<Node*> treeStack;                 ///> Stack of pointers to nodes.
         public:
             BinaryTree(std::string inputExpr);
         private:
@@ -127,16 +126,24 @@ namespace calc{
             Node* NewNode(std::string newData);
 
             /**
-             * Populate the binary tree from the postfix expression.
+             * Build (binary) expression tree.
+             * This method builds an expression tree with each node being either an operator
+             * or an operand. Each node comprises of a pointer to its own memory address,
+             * pointing to an instance of the Node struct. Each Node instance has a value
+             * attached to in string form 'data', a pointer to the left child and a pointer to
+             * the right child (pointers to Node instances).
+             * @return a pointer to the root of the tree.
              */
-            void Populate();
+            Node* BuildExpressionTree();
 
             /**
              * Evaluate (binary) expression tree.
+             * This method evaluates an expression tree by traversing it in preorder.
              * @tparam T the type of numbers handled.
-             * @param node starting node for evaluation.
+             * @param node root node for the evaluation.
+             * @return the result of the evaluation.
              */
-            template<typename T> T Evaluate(Node* node = treeStack.top()){
+            template<typename T> T EvaluateExpressionTree(Node* node){
                 if (node == NULL){
                     return 0;
                 }
@@ -153,12 +160,12 @@ namespace calc{
                 T leftOperand;
                 T rightOperand;
                 if (expr->isIntegerOnly){
-                    leftOperand = Evaluate<int>(node->left);
-                    rightOperand = Evaluate<int>(node->right);
+                    leftOperand = EvaluateExpressionTree<int>(node->left);
+                    rightOperand = EvaluateExpressionTree<int>(node->right);
                 }
                 else{
-                    leftOperand = Evaluate<double>(node->left);
-                    rightOperand = Evaluate<double>(node->right);
+                    leftOperand = EvaluateExpressionTree<double>(node->left);
+                    rightOperand = EvaluateExpressionTree<double>(node->right);
                 }
 
                 if (node->data == std::string {'+'}){
@@ -170,9 +177,18 @@ namespace calc{
                 else if (node->data == std::string {'*'}){
                     return leftOperand * rightOperand;
                 }
+                else if (node->data == std::string {'/'}){
+                    return leftOperand / rightOperand;
+                }
                 else if (node->data == std::string {'^'}){
                     return pow(leftOperand, rightOperand);
                 }
-            };
+                return 0;
+            }
+        public:
+            /*
+             * Compute and broadcast result to stdout.
+             */
+            void ComputeAndDisplay();
     };
 }
