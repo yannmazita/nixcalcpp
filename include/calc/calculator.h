@@ -41,15 +41,8 @@ namespace calc{
             void ClearNumber();
 
             /**
-             * Build string from single character.
-             * @param character to build from.
-             * @return the string.
-             */
-            std::string BuildStringFromChar(char character);
-
-            /**
              * Evaluate whether character is an operator.
-             * The character has to be a string. Use BuildStringFromChar if needed.
+             * The character has to be a string.
              * @param chr the character.
              * @return true if character is an operetor, false otherwise.
              */

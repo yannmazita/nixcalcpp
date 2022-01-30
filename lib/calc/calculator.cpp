@@ -36,19 +36,19 @@ namespace calc{
     }
 
     bool Expression::IsOperator(std::string chr){
-        if (chr == BuildStringFromChar('^')){
+        if (chr == std::string {'^'}){
             isIntegerOnly = false;
             return true;
         }
-        if (chr == BuildStringFromChar('/')){
+        if (chr == std::string{'/'}){
             isIntegerOnly = false;
             return true;
         }
         // Update isIntegerOnly to false when using additional mathematical functions.
         
-        if (chr == BuildStringFromChar('+') ||
-                chr == BuildStringFromChar('-') ||
-                chr == BuildStringFromChar('*')){
+        if (chr == std::string {'+'} ||
+                chr == std::string {'-'} ||
+                chr == std::string {'*'}){
             return true;
         }
         else{
@@ -57,10 +57,10 @@ namespace calc{
     }
 
     bool Expression::IsLeftAssociative(std::string oper){
-        if (oper == BuildStringFromChar('-') ||
-                oper == BuildStringFromChar('/') ||
-                oper == BuildStringFromChar('+') ||
-                oper == BuildStringFromChar('*')){
+        if (oper == std::string {'-'} ||
+                oper == std::string {'/'} ||
+                oper == std::string {'+'} ||
+                oper == std::string {'*'}){
             return true;
         }
         return false;
@@ -74,15 +74,15 @@ namespace calc{
                 // Jump characters until jumpIdx.
                 continue;
             }
-            if (IsOperator(BuildStringFromChar(inputExpr[i]))){
-                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'o'));
+            if (IsOperator(std::string {inputExpr[i]})){
+                tokens.push_back(std::make_pair(std::string {inputExpr[i]}, 'o'));
                 // make_pair() template function to make a std::pair with adequate types
             }
             else if (inputExpr[i] == '('){
-                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'l'));
+                tokens.push_back(std::make_pair(std::string {inputExpr[i]}, 'l'));
             }
             else if (inputExpr[i] == ')'){
-                tokens.push_back(std::make_pair(BuildStringFromChar(inputExpr[i]), 'r'));
+                tokens.push_back(std::make_pair(std::string {inputExpr[i]}, 'r'));
             }
             else if (std::isdigit(inputExpr[i])){
                 jumpIdx = StoreNumber(i, type);
@@ -103,9 +103,9 @@ namespace calc{
         char arr[10] = {'^','1','*','2','/','2','+','3','-','3'};   ///> Precedence array, lowest number means highest precedence.
         char arrGetPrecedence[2];  ///> Precedence of given operators, first value for 'operator1', second value for 'operator2'.
         for (int i = 0; i < 10; i += 2){
-            if (operator1 == BuildStringFromChar(arr[i])){
+            if (operator1 == std::string {arr[i]}){
                 arrGetPrecedence[0] = arr[i + 1];
-            } else if (operator2 == BuildStringFromChar(arr[i])){
+            } else if (operator2 == std::string{arr[i]}){
                 arrGetPrecedence[1] = arr[i + 1];
             }
         }
@@ -130,7 +130,7 @@ namespace calc{
                 outputQueue.push(tokens[i].first);
             }
             else if (tokens[i].second == 'o'){
-                while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != BuildStringFromChar('(')) &&
+                while( !(operatorStack.empty()) && (IsOperator(operatorStack.top()) && operatorStack.top() != std::string {'('}) &&
                         (GetPrecedence(operatorStack.top(), tokens[i].first)==1 || ((GetPrecedence(operatorStack.top(), tokens[i].first)==0) &&
                                                                             IsLeftAssociative(tokens[i].first))) ){
                     outputQueue.push(operatorStack.top());
@@ -142,17 +142,17 @@ namespace calc{
                 operatorStack.push(tokens[i].first);
             }
             else if (tokens[i].second == 'r'){
-                while(!operatorStack.empty() && (operatorStack.top() != BuildStringFromChar('('))){
+                while(!operatorStack.empty() && (operatorStack.top() != std::string {'('})){
                     outputQueue.push(operatorStack.top());
                     operatorStack.pop();
                 }
-                if (!operatorStack.empty() && operatorStack.top() == BuildStringFromChar('(')){
+                if (!operatorStack.empty() && operatorStack.top() == std::string {'('}){
                     operatorStack.pop();
                 }
             }
         }
         while (!operatorStack.empty()){
-            if (operatorStack.top() != BuildStringFromChar('(')){
+            if (operatorStack.top() != std::string {'('}){
                 outputQueue.push(operatorStack.top());
                 operatorStack.pop();
             }
