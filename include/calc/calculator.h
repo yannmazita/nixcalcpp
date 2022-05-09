@@ -7,7 +7,7 @@
 
 namespace calc{
     /**
-     * Container for expressions input by user.
+     * Container for expressions input by the user.
      */
     class Expression{
         private:
