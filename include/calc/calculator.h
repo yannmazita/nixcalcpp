@@ -130,7 +130,7 @@ namespace calc{
 
             /**
              * Evaluate (binary) expression tree.
-             * This method evaluates an expression tree by traversing it in preorder.
+             * This method evaluates an expression tree by going through in preorder.
              * @tparam T the type of numbers handled.
              * @param node root node for the evaluation.
              * @return the result of the evaluation.
