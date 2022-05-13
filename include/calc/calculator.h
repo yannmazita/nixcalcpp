@@ -152,12 +152,12 @@ namespace calc{
                 T leftOperand;
                 T rightOperand;
                 if (expr->isIntegerOnly){
-                    leftOperand = EvaluateExpressionTree<int>(node->left);
-                    rightOperand = EvaluateExpressionTree<int>(node->right);
+                    leftOperand = EvaluateExpressionTree<long long int>(node->left);
+                    rightOperand = EvaluateExpressionTree<long long int>(node->right);
                 }
                 else{
-                    leftOperand = EvaluateExpressionTree<double>(node->left);
-                    rightOperand = EvaluateExpressionTree<double>(node->right);
+                    leftOperand = EvaluateExpressionTree<long double>(node->left);
+                    rightOperand = EvaluateExpressionTree<long double>(node->right);
                 }
 
                 if (node->data == std::string {'+'}){
