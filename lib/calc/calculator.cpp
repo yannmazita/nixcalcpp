@@ -206,11 +206,11 @@ namespace calc{
     void BinaryTree::ComputeAndDisplay(){
         Node* tree = BuildExpressionTree();
         if (expr->isIntegerOnly){
-            std::cout << EvaluateExpressionTree<int>(tree);
+            std::cout << EvaluateExpressionTree<long long int>(tree);
             std::cout << "\n";
         }
         else {
-            std::cout << EvaluateExpressionTree<double>(tree);
+            std::cout << EvaluateExpressionTree<long double>(tree);
             std::cout << "\n";
         }
     }
